@@ -1,9 +1,10 @@
 import json
-import expense
+import app.models.expense as expense
+from app.utils.constants import JSON_PATH
 
 def load_data():
     try:
-        with open(r'data.json', 'r') as file:
+        with open(JSON_PATH, 'r') as file:
             expenses=[]
             data = json.load(file)
             for d in data:
@@ -19,5 +20,5 @@ def save_data(expenses):
     for exp in expenses:
         exp_dicts.append(exp.to_dict())
 
-    with open(r'data.json', 'w') as file:
+    with open(JSON_PATH, 'w') as file:
         json.dump(exp_dicts,file, indent=4) 

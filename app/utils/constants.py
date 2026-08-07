@@ -21,3 +21,15 @@ STAT_OPTIONS = {
     5: "Chart",
     6: "Exit"
 }
+
+
+DATABASE_PATH = "database/expense.db"
+JSON_PATH = "data/data.json"
+
+ALLOWED_COLUMNS = [
+    "category",
+    "e_date",
+    "payment_method",
+    "amount",
+    "description"
+]

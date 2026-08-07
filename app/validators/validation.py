@@ -1,4 +1,9 @@
 from datetime import date
+from app.utils.constants import CATEGORIES
+from app.utils.constants import PAYMENT_METHODS
+from app.utils.constants import MENU_OPTIONS
+from app.utils.constants import STAT_OPTIONS
+
 
 def get_valid_amount(prompt):
     while True:
@@ -29,7 +34,7 @@ def get_valid_string(prompt):
         else:
             print ("Input cannot be empty")
 
-from constants import CATEGORIES
+
 
 def get_valid_category(prompt):
     while True:
@@ -38,7 +43,7 @@ def get_valid_category(prompt):
             return value
         else:
             print(f"Invalid category. Choose from: {CATEGORIES}")       
-from constants import PAYMENT_METHODS
+
 
 def get_valid_payment(prompt):
     while True:
@@ -48,7 +53,7 @@ def get_valid_payment(prompt):
         else:
             print(f"Invalid payment method. Choose from: {PAYMENT_METHODS}")
 
-from constants import MENU_OPTIONS
+
 def get_valid_menu_option(prompt):
     while True:
         try:
@@ -94,7 +99,7 @@ def get_valid_update_option(prompt):
         except ValueError:
             print(f"Please choose option between 1 and 6")    
 
-from constants import STAT_OPTIONS
+
 def get_valid_stat_option(prompt):
     while True:
         try:

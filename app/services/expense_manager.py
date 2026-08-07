@@ -1,8 +1,10 @@
-import expense
+import app.models.expense as expense
+import app.repositories.sqlite_repository  as sqlite_repository
 
 class ExpenseManager:
  
-    def __init__(self):
+    def __init__(self,repo):
+        self.repo = repo
         self.expenses=[]
         
     def add_expense(self,expense):
@@ -10,12 +12,9 @@ class ExpenseManager:
         
 
     
-    def search_expense_bycategory(self,cat):
-        exp_list=[]
-        for exp in self.expenses:
-            if exp.category == cat:
-                  exp_list.append(exp)
-    
+    def search_expenses(self,column_name,value):
+        
+        exp_list = self.repo.search_expenses(column_name,value)
         return exp_list  
            
     def search_expense_bydate(self,e_date):
@@ -33,6 +32,9 @@ class ExpenseManager:
             print("expense removed succefully")
     
     def get_all_expenses(self):
+        
+        self.expenses = self.repo.get_all_expenses()
+        print(f"total no.of expenses = {len(self.expenses)}")
         for exp in self.expenses:
             exp.display()
     
