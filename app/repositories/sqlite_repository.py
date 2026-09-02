@@ -21,7 +21,7 @@ class SQLiteRepository:
 
         self.cursor.execute(sql)
         self.connection.commit()
-        print("DB initiation completed")
+        
 
     def add_expense(self,expense):
         expense_dict = expense.to_dict()
@@ -72,11 +72,12 @@ class SQLiteRepository:
         expense_dict["payment_method"] = data[5]
         expense_dict["created_at"] = data[6]
 
-        return expense_dict\
+        return expense_dict
 
     def search_expenses(self,column_name,value):
         if column_name not in ALLOWED_COLUMNS:
-            print ("Enter the valis column name to search")
+            print ("Enter the valid column name to search")
+            return []
         else:
             sql = f" select * from expenses where {column_name} = ? "
             
@@ -87,12 +88,91 @@ class SQLiteRepository:
                 expenses.append(expense.Expense.from_dict(self.tuple_to_dict(row)))
             return expenses
         
+    def update_expense(self,e_id,column_name,value):
+        if column_name not in ALLOWED_COLUMNS:
+            print ("Enter the valid column name to search")
+            return []
+        else:
+            sql = f" update expenses set {column_name} = ? where e_id = ? "
+            
+            self.cursor.execute(sql,(value,e_id))
+            self.connection.commit()
+            
+    def delete_expense(self,e_id):
+        sql = f" delete from expenses where e_id = ? "
+            
+        self.cursor.execute(sql,(e_id,))
+        self.connection.commit()    
+    def rows_to_summary_dict(self, rows):
+        summary = {}
+        for row in rows:
+            summary[row[0]] = row[1]
+        return summary
+
+    def total_records(self):
+        sql = "SELECT COUNT(*) FROM expenses"
+        self.cursor.execute(sql)
+        row = self.cursor.fetchone()
+        return row[0]
+    def total_amount(self):
+        sql = " SELECT SUM(amount) from expenses"
+        self.cursor.execute(sql)
+        row = self.cursor.fetchone()
+        return row[0]
     
+    def highest_expense(self):
+        sql = """SELECT *
+            FROM expenses
+            WHERE amount = (SELECT MAX(amount) FROM expenses)"""
+        
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        expenses = []
 
+        for row in rows:
+            expense_dict = self.tuple_to_dict(row)
+            expenses.append(expense.Expense.from_dict(expense_dict))
 
+        return expenses
+    
+    def lowest_expense(self):
+        sql = """SELECT *
+            FROM expenses
+            WHERE amount = (SELECT MIN(amount) FROM expenses)"""
+        
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        expenses = []
 
+        for row in rows:
+            expense_dict = self.tuple_to_dict(row)
+            expenses.append(expense.Expense.from_dict(expense_dict))
 
+        return expenses
+               
+    def average_expense(self):
+        sql = "SELECT AVG(amount) from expenses"
+        self.cursor.execute(sql)
+        row=self.cursor.fetchone()
+        return(row[0])
+    def category_summary(self):
+        sql = "SELECT category,SUM(amount) from expenses GROUP BY category"
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        return(self.rows_to_summary_dict(rows))
+    def payment_method_summary(self):
+        sql = "SELECT payment_method,SUM(amount) from expenses GROUP BY payment_method"
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        return(self.rows_to_summary_dict(rows))
+    def month_by_summary(self):
+        sql = "SELECT strftime('%Y-%m', e_date),SUM(amount) from expenses GROUP BY strftime('%Y-%m', e_date)"
+        self.cursor.execute(sql)
+        rows = self.cursor.fetchall()
+        return(self.rows_to_summary_dict(rows))
 
+    def close(self):
+        self.connection.close()
         
 
         

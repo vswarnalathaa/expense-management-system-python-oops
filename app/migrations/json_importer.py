@@ -4,10 +4,11 @@ import app.repositories.json_repository as json_repository
 import app.services.expense_manager as expense_manager
 
 def import_json_to_database():
-    manager = expense_manager.ExpenseManager()
+    repo = sqlite_repository.SQLiteRepository()
+    manager = expense_manager.ExpenseManager(repo)
     
     manager.expenses = json_repository.load_data() 
-    repo = sqlite_repository.SQLiteRepository()
+    
 
     for expense in manager.expenses:
         repo.add_expense(expense)

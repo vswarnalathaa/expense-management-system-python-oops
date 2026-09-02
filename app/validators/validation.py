@@ -76,7 +76,7 @@ def get_valid_option(prompt):
         except ValueError:
             print(f"Please choose option 1 or 3.")
 
-def get_valid_optdel(prompt,length):    
+def get_valid_record(prompt,length):    
     while True:
         try:
             menu = int(input(prompt))
